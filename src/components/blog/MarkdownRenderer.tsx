@@ -14,12 +14,13 @@ const MarkdownRenderer = ({ content, className = '' }: MarkdownRendererProps) =>
   useEffect(() => {
     const renderMarkdown = async () => {
       if (contentRef.current) {
-        // Configure marked options to handle all markdown features including tables
+        // Configure marked options with valid properties according to MarkedOptions type
         marked.setOptions({
           breaks: true,
           gfm: true,
-          tables: true,
-          headerIds: true,
+          // Note: We're removing 'tables' as it's not in the MarkedOptions type
+          // Tables will still be rendered as gfm is set to true (GitHub Flavored Markdown)
+          headerIds: false,
           mangle: false
         });
 
