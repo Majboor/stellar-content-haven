@@ -12,23 +12,35 @@ const MarkdownRenderer = ({ content, className = '' }: MarkdownRendererProps) =>
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (contentRef.current) {
-      // Configure marked options
-      marked.setOptions({
-        breaks: true,
-        gfm: true,
-      });
+    const renderMarkdown = async () => {
+      if (contentRef.current) {
+        // Configure marked options
+        marked.setOptions({
+          breaks: true,
+          gfm: true,
+        });
 
-      // Convert markdown to HTML and sanitize
-      const rawHtml = marked.parse(content);
-      const sanitizedHtml = DOMPurify.sanitize(rawHtml);
-      
-      // Set the inner HTML
-      contentRef.current.innerHTML = sanitizedHtml;
+        try {
+          // Convert markdown to HTML and sanitize
+          // Use await to handle the Promise correctly
+          const rawHtml = await marked.parse(content);
+          const sanitizedHtml = DOMPurify.sanitize(rawHtml);
+          
+          // Set the inner HTML
+          contentRef.current.innerHTML = sanitizedHtml;
+          
+          // Initialize any interactive elements or syntax highlighting
+          // This is where you would add code highlighting, etc.
+        } catch (error) {
+          console.error('Error parsing markdown:', error);
+          if (contentRef.current) {
+            contentRef.current.innerHTML = '<p>Error rendering content</p>';
+          }
+        }
+      }
+    };
 
-      // Initialize any interactive elements or syntax highlighting
-      // This is where you would add code highlighting, etc.
-    }
+    renderMarkdown();
   }, [content]);
 
   return (
