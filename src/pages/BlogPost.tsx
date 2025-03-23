@@ -35,13 +35,36 @@ const BlogPost = () => {
       if (metaDescription) {
         metaDescription.setAttribute('content', post.description || '');
       }
+      
+      // Update Open Graph meta tags
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) {
+        ogTitle.setAttribute('content', post.title);
+      }
+      
+      const ogDescription = document.querySelector('meta[property="og:description"]');
+      if (ogDescription) {
+        ogDescription.setAttribute('content', post.description || '');
+      }
     }
     
     return () => {
       document.title = 'Digital Software Planet';
+      // Reset meta description
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
         metaDescription.setAttribute('content', 'Digital Software Planet Blog');
+      }
+      
+      // Reset Open Graph meta tags
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) {
+        ogTitle.setAttribute('content', 'Lovable Generated Project');
+      }
+      
+      const ogDescription = document.querySelector('meta[property="og:description"]');
+      if (ogDescription) {
+        ogDescription.setAttribute('content', 'Lovable Generated Project');
       }
     };
   }, [post]);
