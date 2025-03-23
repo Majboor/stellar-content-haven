@@ -14,23 +14,42 @@ const MarkdownRenderer = ({ content, className = '' }: MarkdownRendererProps) =>
   useEffect(() => {
     const renderMarkdown = async () => {
       if (contentRef.current) {
-        // Configure marked options
+        // Configure marked options to handle all markdown features including tables
         marked.setOptions({
           breaks: true,
           gfm: true,
+          tables: true,
+          headerIds: true,
+          mangle: false
         });
 
         try {
           // Convert markdown to HTML and sanitize
-          // Use await to handle the Promise correctly
           const rawHtml = await marked.parse(content);
           const sanitizedHtml = DOMPurify.sanitize(rawHtml);
           
           // Set the inner HTML
           contentRef.current.innerHTML = sanitizedHtml;
           
-          // Initialize any interactive elements or syntax highlighting
-          // This is where you would add code highlighting, etc.
+          // Add some basic styling for tables if they exist
+          const tables = contentRef.current.querySelectorAll('table');
+          if (tables.length > 0) {
+            tables.forEach(table => {
+              table.classList.add('w-full', 'border-collapse', 'my-4');
+              
+              // Style table headers
+              const headers = table.querySelectorAll('th');
+              headers.forEach(header => {
+                header.classList.add('border', 'p-2', 'bg-muted', 'text-left');
+              });
+              
+              // Style table cells
+              const cells = table.querySelectorAll('td');
+              cells.forEach(cell => {
+                cell.classList.add('border', 'p-2');
+              });
+            });
+          }
         } catch (error) {
           console.error('Error parsing markdown:', error);
           if (contentRef.current) {

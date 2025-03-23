@@ -1,4 +1,3 @@
-
 import { toast } from "@/components/ui/use-toast";
 
 export interface BlogPost {
@@ -12,6 +11,18 @@ export interface BlogPost {
   readingTime: string;
   imageUrl: string;
   sourceUrl?: string;
+}
+
+interface BlogPostApiItem {
+  content: string;
+  meta_tags: {
+    title: string;
+    description: string;
+  };
+  slug: string;
+  timestamp: string;
+  url?: string;
+  mode?: string;
 }
 
 export interface BlogPostResponse {
@@ -31,20 +42,29 @@ export const fetchBlogPost = async (slug: string): Promise<BlogPost | null> => {
       throw new Error(`Failed to fetch blog post: ${response.status}`);
     }
     
-    const data: BlogPostResponse = await response.json();
+    // The API returns an array of blog posts
+    const data: BlogPostApiItem[] = await response.json();
+    
+    // Check if we have any results
+    if (!data || data.length === 0) {
+      throw new Error('No blog post found with the given slug');
+    }
+    
+    // Use the first item in the array
+    const postData = data[0];
     
     // Transform the API response to our BlogPost interface
     return {
-      id: data.slug,
-      slug: data.slug,
-      title: data.title,
-      description: data.description,
-      content: data.content,
-      timestamp: data.timestamp,
-      sourceUrl: data.url,
+      id: postData.slug,
+      slug: postData.slug,
+      title: postData.meta_tags.title,
+      description: postData.meta_tags.description,
+      content: postData.content,
+      timestamp: postData.timestamp,
+      sourceUrl: postData.url,
       author: "techrealm.pk",
-      readingTime: calculateReadingTime(data.content),
-      imageUrl: getRandomImageUrl(data.slug),
+      readingTime: calculateReadingTime(postData.content),
+      imageUrl: getRandomImageUrl(postData.slug),
     };
   } catch (error) {
     console.error("Error fetching blog post:", error);
