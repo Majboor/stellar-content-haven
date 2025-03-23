@@ -18,9 +18,8 @@ const MarkdownRenderer = ({ content, className = '' }: MarkdownRendererProps) =>
         marked.setOptions({
           breaks: true,
           gfm: true,
-          // Note: We're removing 'headerIds' and 'tables' as they don't exist in MarkedOptions type
+          // Note: We're removing 'headerIds', 'tables', and 'mangle' as they don't exist in MarkedOptions type
           // Tables will still be rendered as gfm is set to true (GitHub Flavored Markdown)
-          mangle: false
         });
 
         try {
