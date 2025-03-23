@@ -1,3 +1,4 @@
+
 import { toast } from "@/components/ui/use-toast";
 
 export interface BlogPost {
@@ -54,6 +55,7 @@ export const fetchBlogPost = async (slug: string): Promise<BlogPost | null> => {
     const postData = data[0];
     
     // Transform the API response to our BlogPost interface
+    // Use the exact meta title from the API
     return {
       id: postData.slug,
       slug: postData.slug,

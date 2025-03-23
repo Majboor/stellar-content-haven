@@ -27,7 +27,8 @@ const BlogPost = () => {
   // Set page title and meta description
   useEffect(() => {
     if (post) {
-      document.title = post.title || 'Digital Software Planet';
+      // Use the exact meta title from the API
+      document.title = post.title;
       
       // Update meta description
       const metaDescription = document.querySelector('meta[name="description"]');
