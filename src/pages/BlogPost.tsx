@@ -27,11 +27,12 @@ const BlogPost = () => {
   // Set page title and meta description
   useEffect(() => {
     if (post) {
-      document.title = `${post.title} | Digital Software Planet`;
+      document.title = post.title || 'Digital Software Planet';
+      
       // Update meta description
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
-        metaDescription.setAttribute('content', post.description);
+        metaDescription.setAttribute('content', post.description || '');
       }
     }
     
