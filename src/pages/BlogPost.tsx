@@ -60,6 +60,9 @@ const BlogPost = () => {
       
       const ogDescription = createMetaTag('og:description', 'og:description');
       ogDescription.setAttribute('content', post.description || '');
+      
+      // Keep the default OG image from index.html
+      // We're not setting og:image here as it's already defined in index.html
     }
     
     return () => {
@@ -80,6 +83,8 @@ const BlogPost = () => {
       if (ogDescription) {
         ogDescription.setAttribute('content', 'Lovable Generated Project');
       }
+      
+      // We don't reset og:image as we want to keep the new image
     };
   }, [post]);
 
