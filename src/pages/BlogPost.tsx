@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -26,37 +25,52 @@ const BlogPost = () => {
 
   // Set page title and meta description
   useEffect(() => {
+    // Create meta tags if they don't exist
+    const createMetaTag = (name: string, property?: string) => {
+      const selector = property 
+        ? `meta[property="${property}"]` 
+        : `meta[name="${name}"]`;
+      
+      let tag = document.querySelector(selector) as HTMLMetaElement;
+      
+      if (!tag) {
+        tag = document.createElement('meta');
+        if (property) {
+          tag.setAttribute('property', property);
+        } else {
+          tag.setAttribute('name', name);
+        }
+        document.head.appendChild(tag);
+      }
+      
+      return tag;
+    };
+
     if (post) {
-      // Use the exact meta title from the API
+      // Set document title
       document.title = post.title;
       
-      // Update meta description
-      const metaDescription = document.querySelector('meta[name="description"]');
-      if (metaDescription) {
-        metaDescription.setAttribute('content', post.description || '');
-      }
+      // Set meta description
+      const metaDescription = createMetaTag('description');
+      metaDescription.setAttribute('content', post.description || '');
       
-      // Update Open Graph meta tags
-      const ogTitle = document.querySelector('meta[property="og:title"]');
-      if (ogTitle) {
-        ogTitle.setAttribute('content', post.title);
-      }
+      // Set Open Graph meta tags
+      const ogTitle = createMetaTag('og:title', 'og:title');
+      ogTitle.setAttribute('content', post.title);
       
-      const ogDescription = document.querySelector('meta[property="og:description"]');
-      if (ogDescription) {
-        ogDescription.setAttribute('content', post.description || '');
-      }
+      const ogDescription = createMetaTag('og:description', 'og:description');
+      ogDescription.setAttribute('content', post.description || '');
     }
     
     return () => {
+      // Reset title and meta tags on unmount
       document.title = 'Digital Software Planet';
-      // Reset meta description
+      
       const metaDescription = document.querySelector('meta[name="description"]');
       if (metaDescription) {
         metaDescription.setAttribute('content', 'Digital Software Planet Blog');
       }
       
-      // Reset Open Graph meta tags
       const ogTitle = document.querySelector('meta[property="og:title"]');
       if (ogTitle) {
         ogTitle.setAttribute('content', 'Lovable Generated Project');
